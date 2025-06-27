@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sentiment Analyzer</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        input, textarea { width: 100%; padding: 8px; margin: 8px 0; font-size: 16px; }
+        .result { margin-top: 20px; }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        h1, h2, h3 { color: #333; }
+    </style>
+</head>
+<body>
+    <h1>🧠 Tweet-based Sentiment Analyzer</h1>
+
+    <!-- Product Tweet Search -->
+   <form method="POST" action="/tweet_sentiment">
+    <label for="product">Enter Product Name to Analyze Tweets:</label>
+    <input type="text" name="product" required placeholder="e.g. iPhone 14, OnePlus 12">
+    <button type="submit">Analyze Tweets</button>
+</form>
+
+    <!-- Optional Amazon Dataset Button -->
+    <form method="GET" action="/get_data_html">
+        <button type="submit">Analyze Amazon Dataset (Static)</button>
+    </form>
+
+    {% if result %}
+    <div class="result">
+        <h2>Analysis Summary for "{{ result.product }}"</h2>
+        <p><strong>Total Tweets:</strong> {{ result.total }}</p>
+        <p><strong>Positive:</strong> {{ result.positive }}</p>
+        <p><strong>Negative:</strong> {{ result.negative }}</p>
+        <p><strong>Sentiment Score:</strong> {{ result.percentage }}%</p>
+        <p><strong>Overall Sentiment:</strong> {{ result.overall }}</p>
+
+        <h3>Detailed Tweet Analysis</h3>
+        <ul>
+            {% for tweet, analysis in result.details %}
+                <li><strong>{{ analysis.label }}</strong> ({{ analysis.score | round(2) }}): {{ tweet }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</body>
+</html>
