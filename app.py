@@ -2,9 +2,9 @@ from flask import Flask, request, render_template, jsonify
 from transformers import pipeline
 from datasets import load_dataset
 from tweet_sentiment import get_sentiment_from_tweets
+from flipkart_sentiment import get_sentiment_from_flipkart
 app = Flask(__name__)
 sentiment_model = pipeline("sentiment-analysis")
-
 @app.route("/", methods=["GET", "POST"])
 def index():
     result = None
@@ -46,7 +46,6 @@ def get_reviews():
         "details": list(zip(review_list, analysis))
     }
     return jsonify(result)
-
 @app.route("/get_data_html", methods=["GET", "POST"])
 def get_data_html():
     dataset = load_dataset("amazon_polarity", split="train[:10]")
@@ -79,9 +78,19 @@ def tweet_sentiment_page():
     result = None
     if request.method == "POST":
         product = request.form.get("product")
-        print("🧪 User entered product:", product)  # DEBUG
+        print("🧪 User entered product:", product)  
         if product:
             result = get_sentiment_from_tweets(product, limit=20)
     return render_template("index.html", result=result)
+@app.route("/flipkart_sentiment", methods=["GET", "POST"])
+def flipkart_sentiment_page():
+    result = None
+    if request.method == "POST":
+        product = request.form.get("product")
+        if product:
+            # Correct function call
+            result = get_sentiment_from_flipkart(product, limit=100)  # You can adjust limit here
+    return render_template("index.html", result=result)
+
 if __name__ == "__main__":
     app.run(debug=True)
