@@ -88,8 +88,7 @@ def flipkart_sentiment_page():
     if request.method == "POST":
         product = request.form.get("product")
         if product:
-            # Correct function call
-            result = get_sentiment_from_flipkart(product, limit=100)  # You can adjust limit here
+            result = get_sentiment_from_flipkart(product, limit=100)  
     return render_template("index.html", result=result)
 
 if __name__ == "__main__":
